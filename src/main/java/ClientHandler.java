@@ -1,14 +1,17 @@
 import java.io.*;
 import java.net.Socket;
+import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 public class ClientHandler implements Runnable {
     private final Socket clientSocket;
     private final Server server;
-    private BufferedReader in;
-    private PrintWriter out;
-    private String id;
+    private final BufferedReader in;
+    private final PrintWriter out;
+    public String id;
+    public String room;
     private static final Set<ClientHandler> clients = new HashSet<>();
 
     public ClientHandler(Socket socket, Server server) {
@@ -28,7 +31,7 @@ public class ClientHandler implements Runnable {
     private void broadcast(String message) {
         synchronized (clients) {
             for (ClientHandler client: clients) {
-                if (client != this) {
+                if (client != this && Objects.equals(client.room, this.room)) {
                     client.out.println(message);
                 }
             }
@@ -47,7 +50,38 @@ public class ClientHandler implements Runnable {
             out.println("Welcome, " + id);
             String message;
             while ((message = in.readLine()) != null) {
-                broadcast(id + ": " + message);
+                if (message.charAt(0) == '\\') {
+                    var command = message.substring(1).split(" ");
+                    String action = command[0];
+                    switch (action) {
+                        case "list":
+                            var rooms = server.getAllRooms();
+                            out.println("Listing rooms: ");
+                            out.println(Arrays.toString(rooms.toArray()));
+                            break;
+                        case "create":
+                            String roomToCreate = command[1];
+                            out.println("Creating room: " + roomToCreate);
+                            server.createRoom(roomToCreate);
+                            break;
+                        case "join":
+                            String roomToJoin = command[1];
+                            out.println("Joining room: " + roomToJoin);
+                            server.addUserToRoom(id, roomToJoin);
+                            this.room = roomToJoin;
+                            break;
+                        case "people":
+                            String roomToList = command[1];
+                            var users = server.getUsersInRoom(roomToList);
+                            out.println("Participants in room " + roomToList + ":");
+                            out.println(Arrays.toString(users.toArray()));
+                            break;
+                        default:
+                            broadcast("unknown command");
+                    }
+                } else {
+                    broadcast(id + ": " + message);
+                }
             }
         } catch (IOException e) {
             e.printStackTrace();
