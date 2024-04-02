@@ -20,6 +20,7 @@ public class Server {
         int port = 1234;
         try (ServerSocket serverSocket = new ServerSocket(port)) {
             System.out.println("Server started on port: " + port);
+            this.createRoom("Main");
             while (true) {
                 Socket clientSocket = serverSocket.accept();
                 System.out.println("Client connected: ");

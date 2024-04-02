@@ -4,10 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="27a44a15-f3ea-4e91-87db-5868ec5020b7" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+    <list default="true" id="27a44a15-f3ea-4e91-87db-5868ec5020b7" name="Changes" comment="Implemented basic commands.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Client.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Client.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/ClientHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ClientHandler.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/Server.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Server.java" afterDir="false" />
     </list>
@@ -90,8 +89,19 @@
       <updated>1711893009930</updated>
       <workItem from="1711893010949" duration="206000" />
       <workItem from="1711893224553" duration="21206000" />
-      <workItem from="1711966631383" duration="3350000" />
+      <workItem from="1711966631383" duration="3523000" />
+      <workItem from="1712065762210" duration="3977000" />
+      <workItem from="1712069962572" duration="617000" />
     </task>
+    <task id="LOCAL-00001" summary="Implemented basic commands.">
+      <option name="closed" value="true" />
+      <created>1711970121112</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1711970121112</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -107,5 +117,9 @@
         </entry>
       </map>
     </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Implemented basic commands." />
+    <option name="LAST_COMMIT_MESSAGE" value="Implemented basic commands." />
   </component>
 </project>

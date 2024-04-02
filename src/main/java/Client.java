@@ -3,10 +3,10 @@ import java.net.Socket;
 import java.util.Scanner;
 
 public class Client {
-    private Socket socket;
-    private BufferedReader in;
-    private PrintWriter out;
-    private Scanner scanner;
+    private final Socket socket;
+    private final BufferedReader in;
+    private final PrintWriter out;
+    private final Scanner scanner;
 
     public Client(String ip, int port) throws IOException {
         socket = new Socket(ip, port);
@@ -58,8 +58,8 @@ public class Client {
             userInputThread.start();
             receiveThread.start();
 
-            userInputThread.join(); // Wait for the user input thread to finish
-            receiveThread.join(); // Wait for the receive thread to finish
+            userInputThread.join();
+            receiveThread.join();
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }

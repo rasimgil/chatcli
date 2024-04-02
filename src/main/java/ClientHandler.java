@@ -13,6 +13,8 @@ public class ClientHandler implements Runnable {
     public String id;
     public String room;
     private static final Set<ClientHandler> clients = new HashSet<>();
+    public static final String ANSI_RESET = "\u001B[0m";
+    public static final String ANSI_CYAN = "\u001B[36m";
 
     public ClientHandler(Socket socket, Server server) {
         this.clientSocket = socket;
@@ -38,49 +40,63 @@ public class ClientHandler implements Runnable {
         }
     }
 
+    private void handleCommand(String message) {
+        var command = message.substring(1).split(" ");
+        String action = command[0];
+        switch (action) {
+            case "list":
+                var rooms = server.getAllRooms();
+                out.println("Listing rooms: ");
+                out.println(Arrays.toString(rooms.toArray()));
+                break;
+            case "create":
+                String roomToCreate = command[1];
+                out.println("Creating room: " + roomToCreate);
+                if (!server.createRoom(roomToCreate)) {
+                    out.println("Error creating room: "  + roomToCreate);
+                }
+                break;
+            case "join":
+                String roomToJoin = command[1];
+                out.println("Joining room: " + roomToJoin);
+                if (!server.addUserToRoom(id, roomToJoin)) {
+                    out.println("Error joining room: " + roomToJoin);
+                }
+                else {
+                    this.room = roomToJoin;
+                }
+                break;
+            case "people":
+                String roomToList = command[1];
+                var users = server.getUsersInRoom(roomToList);
+                out.println("Participants in room " + roomToList + ":");
+                out.println(Arrays.toString(users.toArray()));
+                break;
+            default:
+                out.println("unknown command");
+        }
+    }
+
     @Override
     public void run() {
         try {
             out.println("Enter username: ");
             id = in.readLine();
             while (!server.setNameToUser(id)) {
-                out.println("Username not available, enter a different username: ");
+                out.print("Username not available, enter a different username: ");
                 id = in.readLine();
             }
             out.println("Welcome, " + id);
+            server.addUserToRoom(this.id, "Main");
+            this.room = "Main";
+
             String message;
             while ((message = in.readLine()) != null) {
                 if (message.charAt(0) == '\\') {
-                    var command = message.substring(1).split(" ");
-                    String action = command[0];
-                    switch (action) {
-                        case "list":
-                            var rooms = server.getAllRooms();
-                            out.println("Listing rooms: ");
-                            out.println(Arrays.toString(rooms.toArray()));
-                            break;
-                        case "create":
-                            String roomToCreate = command[1];
-                            out.println("Creating room: " + roomToCreate);
-                            server.createRoom(roomToCreate);
-                            break;
-                        case "join":
-                            String roomToJoin = command[1];
-                            out.println("Joining room: " + roomToJoin);
-                            server.addUserToRoom(id, roomToJoin);
-                            this.room = roomToJoin;
-                            break;
-                        case "people":
-                            String roomToList = command[1];
-                            var users = server.getUsersInRoom(roomToList);
-                            out.println("Participants in room " + roomToList + ":");
-                            out.println(Arrays.toString(users.toArray()));
-                            break;
-                        default:
-                            broadcast("unknown command");
-                    }
+                    handleCommand(message);
                 } else {
-                    broadcast(id + ": " + message);
+                    String s = String.format("%s[%s]: %s", this.room, this.id, message);
+                    broadcast(ANSI_CYAN + s + ANSI_RESET);
                 }
             }
         } catch (IOException e) {
