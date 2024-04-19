@@ -15,6 +15,8 @@ public class ClientHandler implements Runnable {
     private static final Set<ClientHandler> clients = new HashSet<>();
     public static final String ANSI_RESET = "\u001B[0m";
     public static final String ANSI_CYAN = "\u001B[36m";
+    public static final String ANSI_YELLOW_BOLD = "\033[1;33m";
+    public static final String ANSI_RED_RED = "\033[1;31m";
 
     public ClientHandler(Socket socket, Server server) {
         this.clientSocket = socket;
@@ -40,37 +42,56 @@ public class ClientHandler implements Runnable {
         }
     }
 
+    private String systemMessage(String message) {
+        return ANSI_YELLOW_BOLD + message + ANSI_RESET;
+    }
+
+    private String errorMessage(String message) {
+        return ANSI_RED_RED + message + ANSI_RESET;
+    }
+
     private void handleCommand(String message) {
         var command = message.substring(1).split(" ");
         String action = command[0];
         switch (action) {
             case "list":
                 var rooms = server.getAllRooms();
-                out.println("Listing rooms: ");
-                out.println(Arrays.toString(rooms.toArray()));
+                String listMessage = String.format("[Server]: %s", Arrays.toString(rooms.toArray()));
+                out.println(systemMessage(listMessage));
                 break;
             case "create":
                 String roomToCreate = command[1];
-                out.println("Creating room: " + roomToCreate);
                 if (!server.createRoom(roomToCreate)) {
-                    out.println("Error creating room: "  + roomToCreate);
+                    String errorCreateMessage = String.format("[Server]: Error creating %s", roomToCreate);
+                    out.println(errorMessage(errorCreateMessage));
+                } else {
+                    String createMessage = String.format("[Server]: Created %s", roomToCreate);
+                    out.println(systemMessage(createMessage));
                 }
                 break;
             case "join":
                 String roomToJoin = command[1];
-                out.println("Joining room: " + roomToJoin);
                 if (!server.addUserToRoom(id, roomToJoin)) {
-                    out.println("Error joining room: " + roomToJoin);
+                    String errorJoinRoom = String.format("[Server]: Error joining %s", roomToJoin);
+                    out.println(errorMessage(errorJoinRoom));
                 }
                 else {
+                    String currentRoom = this.room;
+                    String leaveNotifyMessage = String.format("[Server]: %s left the room", this.id);
+                    broadcast(systemMessage(leaveNotifyMessage));
+                    server.removeUserFromRoom(id, currentRoom);
                     this.room = roomToJoin;
+                    String joinMessage = String.format("[Server]: Joined %s", roomToJoin);
+                    out.println(systemMessage(joinMessage));
+                    String joinNotifyMessage = String.format("[Server]: %s joined the room", this.id);
+                    broadcast(systemMessage(joinNotifyMessage));
                 }
                 break;
             case "people":
                 String roomToList = command[1];
                 var users = server.getUsersInRoom(roomToList);
-                out.println("Participants in room " + roomToList + ":");
-                out.println(Arrays.toString(users.toArray()));
+                String peopleMessage = String.format("[Server]: %s%s", roomToList, Arrays.toString(users.toArray()));
+                out.println(systemMessage(peopleMessage));
                 break;
             default:
                 out.println("unknown command");
@@ -80,13 +101,16 @@ public class ClientHandler implements Runnable {
     @Override
     public void run() {
         try {
-            out.println("Enter username: ");
+            String userNameMessage = "[Server]: Enter username: ";
+            out.println(systemMessage(userNameMessage));
             id = in.readLine();
             while (!server.setNameToUser(id)) {
-                out.print("Username not available, enter a different username: ");
+                String badNameError = "Username not available, enter a different username: ";
+                out.print(errorMessage(badNameError));
                 id = in.readLine();
             }
-            out.println("Welcome, " + id);
+            String greetMessage = "Welcome, " + id;
+            out.println(systemMessage(greetMessage));
             server.addUserToRoom(this.id, "Main");
             this.room = "Main";
 

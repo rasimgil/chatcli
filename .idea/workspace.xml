@@ -4,11 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="27a44a15-f3ea-4e91-87db-5868ec5020b7" name="Changes" comment="Implemented basic commands.">
+    <list default="true" id="27a44a15-f3ea-4e91-87db-5868ec5020b7" name="Changes" comment="Small adjustments.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Client.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Client.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/ClientHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ClientHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Server.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Server.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -24,6 +22,9 @@
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
   </component>
   <component name="ProblemsViewState">
     <option name="selectedTabId" value="CurrentFile" />
@@ -91,7 +92,9 @@
       <workItem from="1711893224553" duration="21206000" />
       <workItem from="1711966631383" duration="3523000" />
       <workItem from="1712065762210" duration="3977000" />
-      <workItem from="1712069962572" duration="617000" />
+      <workItem from="1712069962572" duration="904000" />
+      <workItem from="1713438570635" duration="2996000" />
+      <workItem from="1713553596299" duration="1590000" />
     </task>
     <task id="LOCAL-00001" summary="Implemented basic commands.">
       <option name="closed" value="true" />
@@ -101,7 +104,15 @@
       <option name="project" value="LOCAL" />
       <updated>1711970121112</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="Small adjustments.">
+      <option name="closed" value="true" />
+      <created>1712070846418</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1712070846418</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -120,6 +131,7 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Implemented basic commands." />
-    <option name="LAST_COMMIT_MESSAGE" value="Implemented basic commands." />
+    <MESSAGE value="Small adjustments." />
+    <option name="LAST_COMMIT_MESSAGE" value="Small adjustments." />
   </component>
 </project>
