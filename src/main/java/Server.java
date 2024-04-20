@@ -41,12 +41,14 @@ public class Server {
         return rooms.containsKey(room) && rooms.get(room).add(user);
     }
 
-    public boolean removeUserFromRoom(String user, String room) {
-        return rooms.containsKey(room) && rooms.get(room).remove(user);
+    public void removeUserFromRoom(String user, String room) {
+        if (rooms.containsKey(room)) {
+            rooms.get(room).remove(user);
+        }
     }
 
     public Set<String> getUsersInRoom(String room) {
-        return rooms.getOrDefault(room, Set.of());
+        return rooms.getOrDefault(room, Set.of("false"));
     }
 
     public boolean createRoom(String room) {
