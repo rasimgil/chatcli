@@ -1,3 +1,5 @@
+package server;
+
 import java.io.*;
 import java.net.Socket;
 import java.util.Arrays;
@@ -7,20 +9,37 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * Handles the communication with a single client in the chat room.
+ */
 public class ClientHandler implements Runnable {
     private static int idCounter = 0;
     private final Socket clientSocket;
     private final Server server;
     private final BufferedReader in;
     private final PrintWriter out;
-    public String id;
-    public String room;
-    private static final Set<ClientHandler> clients = new HashSet<>();
-    public static final String ANSI_RESET = "\u001B[0m";
-    public static final String ANSI_CYAN = "\u001B[36m";
-    public static final String ANSI_YELLOW_BOLD = "\033[1;33m";
-    public static final String ANSI_RED_BOLD = "\033[1;31m";
 
+    /**
+     * The unique identifier for this client.
+     */
+    public String id;
+
+    /**
+     * The current room of the client.
+     */
+    public String room;
+
+    private static final Set<ClientHandler> clients = new HashSet<>();
+    private static final String ANSI_RESET = "\u001B[0m";
+    private static final String ANSI_CYAN = "\u001B[36m";
+    private static final String ANSI_YELLOW_BOLD = "\033[1;33m";
+    private static final String ANSI_RED_BOLD = "\033[1;31m";
+
+    /**
+     * Constructs a new {@link ClientHandler} object.
+     * @param socket The {@link Socket} the client is associated with.
+     * @param server The {@link Server} instance.
+     */
     public ClientHandler(Socket socket, Server server) {
         this.clientSocket = socket;
         this.server = server;
@@ -63,11 +82,11 @@ public class ClientHandler implements Runnable {
     }
 
     private String systemMessage(String message) {
-        return ANSI_YELLOW_BOLD + "[Server]: " + message + ANSI_RESET;
+        return ANSI_YELLOW_BOLD + "[Server.Server]: " + message + ANSI_RESET;
     }
 
     private String errorMessage(String message) {
-        return ANSI_RED_BOLD + "[Server]: " + message + ANSI_RESET;
+        return ANSI_RED_BOLD + "[Server.Server]: " + message + ANSI_RESET;
     }
 
     private boolean invalidString(String s) {
@@ -75,10 +94,6 @@ public class ClientHandler implements Runnable {
         Pattern p = Pattern.compile(alphaNumPattern);
         Matcher matcher = p.matcher(s);
         return !matcher.matches();
-    }
-
-    private void printError(String s) {
-        out.println(errorMessage(s));
     }
 
     private void handlePeople(String room) {
@@ -98,9 +113,13 @@ public class ClientHandler implements Runnable {
             } else {
                 String currentRoom = this.room;
                 synchronized (clients) {
-                    broadcastRoom(systemMessage(this.id + " left the room."));
-                    server.removeUserFromRoom(id, currentRoom);
-                    this.room = room;
+                    if (!server.removeUserFromRoom(id, currentRoom)) {
+                        out.println(errorMessage("Could not leave the room"));
+                        return;
+                    } else {
+                        broadcastRoom(systemMessage(this.id + " left the room."));
+                        this.room = room;
+                    }
                 }
                 out.println(systemMessage("Joined " + room));
                 synchronized (clients) {
@@ -174,6 +193,11 @@ public class ClientHandler implements Runnable {
         }
     }
 
+    /**
+     * Runs the client handler thread.
+     * Handles incoming messages and commands from the client.
+     * Sends messages to other clients in the same room.
+     */
     @Override
     public void run() {
         try {
