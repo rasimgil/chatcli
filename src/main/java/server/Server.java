@@ -30,11 +30,11 @@ public class Server {
      */
     public void startServer(int port) {
         try (ServerSocket serverSocket = new ServerSocket(port)) {
-            System.out.println("Server.Server started on port: " + port);
+            System.out.println("Server started on port: " + port);
             this.createRoom("Main");
             while (true) {
                 Socket clientSocket = serverSocket.accept();
-                System.out.println("Client.Client connected: " + clientSocket.getInetAddress());
+                System.out.println("Client connected: " + clientSocket.getInetAddress());
                 ClientHandler clientHandler = new ClientHandler(clientSocket, this);
                 Thread clientThread = new Thread(clientHandler);
                 clientThread.start();

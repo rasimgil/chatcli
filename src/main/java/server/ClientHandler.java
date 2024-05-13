@@ -82,7 +82,7 @@ public class ClientHandler implements Runnable {
     }
 
     private String systemMessage(String message) {
-        return ANSI_YELLOW_BOLD + "[Server.Server]: " + message + ANSI_RESET;
+        return ANSI_YELLOW_BOLD + "[Server]: " + message + ANSI_RESET;
     }
 
     private String errorMessage(String message) {
